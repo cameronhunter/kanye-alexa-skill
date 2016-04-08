@@ -1,28 +1,47 @@
 import { Skill, Launch, Intent } from 'alexa-annotations';
 import { say, ask } from 'alexa-response';
 import { ssml } from 'alexa-ssml';
+import Twitter from './twitter';
+import TwitterConfig from '../config/twitter.config.js';
 
-@Skill
-export default class Kanye {
+export class Kanye {
+
+  constructor(attributes, client = new Twitter(TwitterConfig)) {
+    this.attributes = attributes || {};
+    this.client = client;
+  }
 
   @Launch
-  launch() {
-    return say('Kanye launched!');
-  }
-
-  @Intent('hello')
-  hello({ name = 'world' }) {
-    return say(`Hello ${name}`).card({ title:'Kanye', content:`Hello ${name}` });
-  }
-
   @Intent('AMAZON.HelpIntent')
-  help() {
-    return ask('I say hello to people. Who should I say hello to?').reprompt('Who should I say hello to?');
+  launch() {
+    return ask('I\'m Kanye. Do you want to hear my tweets?').reprompt('Do you want to hear my tweets?');
   }
 
-  @Intent('AMAZON.CancelIntent', 'AMAZON.StopIntent')
-  stop() {
-    return say(<speak>Goodbye!</speak>);
+  @Intent('LatestTweet', 'AMAZON.YesIntent')
+  tweet() {
+    const offset = this.attributes.offset || 0;
+    return this._getTweet(offset).then(({ text }) => {
+      return ask(text)
+             .card({ title: 'Kanye', content: text })
+             .reprompt('Do you want to hear another tweet?')
+             .attributes({ offset: offset + 1 });
+    }).catch(error => {
+      console.error(error);
+      return say('I had trouble find Kanye\'s latest tweet');
+    });
+  }
+
+  @Intent('AMAZON.CancelIntent', 'AMAZON.NoIntent', 'AMAZON.StopIntent')
+  goodbye() {
+    return say('Goodbye');
+  }
+
+  _getTweet(offset = 0) {
+    return this.client.getUserTimeline({ screen_name: 'kanyewest', count: offset + 1, exclude_replies: true, include_rts: false }).then(
+      (tweets) => tweets[tweets.length - 1]
+    );
   }
 
 }
+
+export default Skill(Kanye);
