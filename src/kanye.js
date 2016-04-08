@@ -1,5 +1,5 @@
 import { Skill, Launch, Intent } from 'alexa-annotations';
-import { say, ask } from 'alexa-response';
+import Response, { say } from 'alexa-response';
 import { ssml } from 'alexa-ssml';
 import Twitter from './twitter';
 import TwitterConfig from '../config/twitter.config.js';
@@ -14,18 +14,21 @@ export class Kanye {
   @Launch
   @Intent('AMAZON.HelpIntent')
   launch() {
-    return ask('I\'m Kanye. Do you want to hear my tweets?').reprompt('Do you want to hear my tweets?');
+    return Response.build({
+      ask: 'I\'m Kanye. Do you want to hear my tweets?',
+      reprompt: 'Do you want to hear my tweets?'
+    });
   }
 
   @Intent('LatestTweet', 'AMAZON.YesIntent')
   tweet() {
     const offset = this.attributes.offset || 0;
-    return this._getTweet(offset).then(({ text }) => {
-      return ask(text)
-             .card({ title: 'Kanye', content: text })
-             .reprompt('Do you want to hear another tweet?')
-             .attributes({ offset: offset + 1 });
-    }).catch(error => {
+    return this._getTweet(offset).then(({ text }) => Response.build({
+      ask: text,
+      reprompt: 'Do you want to hear another tweet?',
+      card: { title: 'Kanye', content: text },
+      attributes: { offset: offset + 1 }
+    })).catch(error => {
       console.error(error);
       return say('I had trouble find Kanye\'s latest tweet');
     });
