@@ -30,7 +30,7 @@ export class Kanye {
       attributes: { offset: offset + 1 }
     })).catch(error => {
       console.error(error);
-      return say('I had trouble find Kanye\'s latest tweet');
+      return say('I had trouble finding Kanye\'s tweets');
     });
   }
 
