@@ -1,7 +1,6 @@
 {
-  "names": [
-    "alexa",
-    "echo",
-    "world"
-  ]
+  "crazy": ["crazy", "nuts", "mad", "insane"],
+  "movie": ["movie", "film", "dvd", "bluray", "video"],
+  "search": ["kim kardashian", "music", "video games", "fashion", "kanye", "twitter"],
+  "wisdom": ["wisdom", "advice", "help", "truth", "knowledge"]
 }

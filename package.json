@@ -42,7 +42,7 @@
     "node-aws-lambda": "^0.1.8",
     "nomnom": "^1.8.1",
     "npm-run-all": "^1.7.0",
-    "twitter-js-client": "0.0.5",
+    "twitter-node-client": "0.0.6",
     "webpack": "^1.12.14"
   },
   "files": [
