@@ -4,25 +4,9 @@ import { ssml } from 'alexa-ssml';
 import Twitter, { hydrateTweetText } from './twitter';
 import TwitterConfig from '../config/twitter.config.js';
 import data, { Type } from './quotes';
-import cleanup, { removeEntities } from './text-cleanup';
+import { getSpeakableText, getImages } from './tweet-cleanup';
 
 const random = (items) => items[Math.floor(Math.random() * items.length)];
-
-const getMessage = (tweet) => {
-  const { urls = [], media = [] } = tweet.entities || {};
-  const text = cleanup(removeEntities(tweet.text, [...urls, ...media]));
-  const image = media.map(media => media.media_url_https)[0];
-
-  if (!text && image) {
-    return { text: 'Kanye tweeted a photo, I\'ve sent it to your Alexa app', image };
-  }
-
-  if (!text && !image && urls.length) {
-    return { text: 'Kanye tweeted a link, I\'ve sent it to your Alexa app' };
-  }
-
-  return { text, image };
-};
 
 export class Kanye {
 
@@ -36,22 +20,20 @@ export class Kanye {
   launch() {
     return Response.build({
       ask: 'I\'m Kanye. Do you want to hear my tweets?',
-      reprompt: 'Do you want to hear my tweets?'
+      reprompt: 'Do you want to hear my tweets?',
+      attributes: {}
     });
   }
 
   @Intent('LatestTweet', 'AMAZON.YesIntent')
   tweet() {
     const max_id = this.attributes.max_id;
-    return this._getTweet(max_id).then(({ tweet, maxId }) => {
-      const { text } = getMessage(tweet);
-      return Response.build({
-        ask: `${text}. Would you like to hear another?`,
-        reprompt: 'Do you want to hear another tweet?',
-        ...this._tweetCard(tweet),
-        attributes: { max_id: maxId }
-      });
-    }).catch(error => {
+    return this._getTweet(max_id).then(({ tweet, maxId }) => Response.build({
+      ask: `${getSpeakableText(tweet)}. Would you like to hear another?`,
+      reprompt: 'Do you want to hear another tweet?',
+      ...this._tweetCard(tweet),
+      attributes: { max_id: maxId }
+    })).catch(error => {
       console.error(error);
       return say('I had trouble finding Kanye\'s tweets');
     });
@@ -95,21 +77,19 @@ export class Kanye {
   }
 
   _tweetResponse(tweet, includeCard = true) {
-    const { text } = getMessage(tweet);
     return Response.build({
-      say: text,
+      say: getSpeakableText(tweet),
       ...(includeCard && this._tweetCard(tweet))
     });
   }
 
   _tweetCard(tweet) {
-    const { image } = getMessage(tweet);
     return {
       card: {
         type: 'Standard',
         title: '@kanyewest',
         text: hydrateTweetText(tweet),
-        ...(image && { image: { smallImageUrl: `${image}:medium`, largeImageUrl: `${image}:large` } })
+        ...getImages(tweet)
       }
     };
   }

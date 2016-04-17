@@ -11,6 +11,7 @@ test('LaunchRequest', t => {
   return Skill(event).then(response => {
     t.deepEqual(response, {
       version: '1.0',
+      sessionAttributes: {},
       response: {
         shouldEndSession: false,
         outputSpeech: { type: 'PlainText', text: 'I\'m Kanye. Do you want to hear my tweets?' },
@@ -26,6 +27,7 @@ test('Help intent', t => {
   return Skill(event).then(response => {
     t.deepEqual(response, {
       version: '1.0',
+      sessionAttributes: {},
       response: {
         shouldEndSession: false,
         outputSpeech: { type: 'PlainText', text: 'I\'m Kanye. Do you want to hear my tweets?' },
