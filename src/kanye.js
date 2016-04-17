@@ -3,6 +3,7 @@ import Response, { say } from 'alexa-response';
 import { ssml } from 'alexa-ssml';
 import Twitter from './twitter';
 import TwitterConfig from '../config/twitter.config.js';
+import data, { Type } from './quotes';
 
 const random = (items) => items[Math.floor(Math.random() * items.length)];
 
@@ -26,7 +27,7 @@ export class Kanye {
   tweet() {
     const offset = this.attributes.offset || 0;
     return this._getTweet(offset).then(({ text }) => Response.build({
-      ask: text,
+      ask: `${text}. Would you like to hear another?`,
       reprompt: 'Do you want to hear another tweet?',
       card: { title: 'Kanye', content: text },
       attributes: { offset: offset + 1 }
@@ -36,53 +37,48 @@ export class Kanye {
     });
   }
 
-  @Intent('Love')
-  love() {
-    return say('I love Kanye as much as Kanye loves Kanye');
-  }
-
-  @Intent('LoveMe')
-  loveMe() {
-    return this._tweet('715370821368283136');
-  }
-
-  @Intent('Movie')
-  movie() {
-    return this._tweet('703600011884498945');
-  }
-
-  @Intent('Style')
-  style() {
-    return this._tweet('707705291056541697');
-  }
-
-  @Intent('Crazy')
-  crazy() {
-    return this._tweet(random(['702564264008159233', '699503963595472897']));
-  }
-
   @Intent('Search')
   search({ query }) {
-    return this.client.getSearch({ q: `${query} from:kanyewest` }).then(([tweet]) => this._tweet(tweet.id_str));
+    return this.client.getSearch({ q: `${query} from:kanyewest` })
+            .then(([tweet]) => this._text(tweet.text))
+            .catch(() => say('I don\'t know anything about that'));
   }
 
-  @Intent('Wisdom')
-  wisdom() {
-    return say('Wisdom');
-    //return this._collection('id').then((tweets) => this._tweet(random(tweets).id_str));
+  @Intent('Crazy', 'Greatest', 'Love', 'LoveMe', 'Movie', 'Quotes', 'Style', 'Wisdom')
+  quote(slots, request) {
+    const category = request.intent.name.toLowerCase();
+    return this._response(random(data[category] || data.quotes));
   }
 
   @Intent('AMAZON.CancelIntent', 'AMAZON.NoIntent', 'AMAZON.StopIntent')
   goodbye() {
-    return say('Goodbye');
+    return this._response(random(data.greatest), false);
   }
 
-  _tweet(id) {
-    return this.client.getTweet({ id }).then(({ text }) => say(text));
+  _response(quote, includeCard = true) {
+    switch (quote.type) {
+      case Type.Text:
+        return this._text(quote.text, includeCard);
+      case Type.Tweet:
+        return this._tweet(quote.id, includeCard);
+      default:
+        return Promise.reject('Unsupported quote type');
+    }
+  }
+
+  _text(text, includeCard = true) {
+    return Response.build({
+      say: text,
+      ...(includeCard && { card: { title: 'Kanye', content: text } })
+    });
+  }
+
+  _tweet(id, includeCard = true) {
+    return this.client.getTweet({ id }).then(tweet => this._text(tweet.text, includeCard));
   }
 
   _getTweet(offset = 0) {
-    return this.client.getUserTimeline({ screen_name: 'kanyewest', count: offset + 1, exclude_replies: true, include_rts: false }).then(
+    return this.client.getUserTimeline({ screen_name: 'kanyewest', count: offset + 1 }).then(
       (tweets) => tweets[tweets.length - 1]
     );
   }
