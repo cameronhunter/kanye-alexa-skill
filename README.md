@@ -9,7 +9,7 @@ Alexa, ask Kanye for wisdom
 Alexa, ask Kanye who's the greatest
 ```
 
-See `model/UTTERANCES` for more example phrases.
+See [`model/UTTERANCES`](https://github.com/cameronhunter/kanye-alexa-skill/blob/master/model/UTTERANCES) for more example phrases.
 
 ## Development
 
