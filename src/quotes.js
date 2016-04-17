@@ -7,33 +7,37 @@ const tweet = (id) => ({ type: Type.Tweet, id });
 const text = (text) => ({ type: Type.Text, text });
 
 export default {
-  crazy: [
+  Crazy: [
     tweet('702564264008159233'),
-    tweet('699503963595472897')
+    tweet('699503963595472897'),
+    tweet('712422657107628033'),
+    tweet('712420683310108672')
   ],
 
-  funny: [
-    tweet('27590685489')
+  Goodbye: [
+    text('I\'ma let you finish, but I still think I\'m the greatest.')
   ],
 
-  greatest: [
+  Greatest: [
     text('I still think I am the greatest.')
   ],
 
-  love: [
+  Love: [
     text('I love Kanye as much as Kanye loves Kanye')
   ],
 
-  loveme: [
-    tweet('715370821368283136')
+  Loveme: [
+    tweet('715370821368283136'),
+    tweet('712427204114837505'),
+    tweet('712426852254670848')
   ],
 
-  movie: [
+  Movie: [
     tweet('703600011884498945')
   ],
 
   // From https://en.wikiquote.org/wiki/Kanye_West
-  quotes: [
+  Quotes: [
     text('I am Warhol. I am the number 1 most impactful artist of our generation. I am Shakespeare in the flesh. Walt Disney. Nike. Google.'),
     text('I ain\'t no muthafuckin celebrity. I ain\'t runnin\' for office. I ain\'t kissin\' nobody\'s muthafuckin babies. I drop your baby and you muthafuckin sue me and shit.'),
     text('The music and the clothing are just as important. That\'s what makes you hiphop. You show people that you\'re hiphop by what you wear.'),
@@ -49,7 +53,7 @@ export default {
     text('I open the debate… The 2nd verse of New Slaves is the best rap verse of all time… meaning… OF ALL TIME IN THE HISTORY OF RAP MUSIC, PERIOD')
   ],
 
-  style: [
+  Style: [
     tweet('707705291056541697')
   ]
 };

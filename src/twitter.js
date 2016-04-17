@@ -37,3 +37,12 @@ export default class Client {
     console[level]('[Twitter]', ...args);
   }
 }
+
+export const hydrateTweetText = (tweet) => {
+  const { urls = [], media = [] } = tweet.entities || {};
+  const length = tweet.text.length;
+  return [...urls, ...media].reduceRight((state, { type, indices, expanded_url }) => {
+    const url = length === indices[1] && !!type ? '' : expanded_url;
+    return state.substring(0, indices[0]) + url + state.substring(indices[1]);
+  }, tweet.text);
+};
