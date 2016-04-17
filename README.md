@@ -5,7 +5,8 @@ An Alexa skill for the Amazon Echo. It reads Kanye's tweets using the [Twitter A
 ## Example phrases
 ```
 Alexa, ask Kanye what's up
-Alexa, ask Kanye what's happenin
+Alexa, ask Kanye for wisdom
+Alexa, ask Kanye who's the greatest
 ```
 
 See `model/UTTERANCES` for more example phrases.
@@ -30,10 +31,18 @@ export default {
 npm test
 ```
 
+### Package
+
+```bash
+npm run package
+```
+
+This creates `build/package.zip` containing the compiled skill - this can be uploaded directly to AWS Lambda. It exposes a single function `index.hander`. Skill utterances defined in the `model` directory are expanded and output to `build/UTTERANCES`.
+
 ### Deploy
 
 ```bash
 npm run deploy
 ```
 
-This creates `build/package.zip` containing the compiled skill exposing a single function `index.handler`. This package is then deployed to AWS Lambda. You can check it out in the [AWS console](https://console.aws.amazon.com/lambda/home?region=us-east-1#/functions/alexa-skill-test). Example utterances are also expanded and output to `build/UTTERANCES`.
+If you configure the project with AWS credentials then you can build, test, package and deploy the project with a single command. You can check it out in the [AWS console](https://console.aws.amazon.com/lambda/home?region=us-east-1#/functions/kanye).
