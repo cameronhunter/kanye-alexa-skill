@@ -11,7 +11,6 @@
     { "intent": "Love" },
     { "intent": "LoveMe" },
     { "intent": "Movie" },
-    { "intent": "Quotes" },
     { "intent": "Search", "slots": [{ "name": "query", "type": "LITERAL" }] },
     { "intent": "Style" },
     { "intent": "Wisdom" }

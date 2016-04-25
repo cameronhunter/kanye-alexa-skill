@@ -19,9 +19,8 @@ export class Kanye {
   @Intent('AMAZON.HelpIntent')
   launch() {
     return Response.build({
-      ask: 'I\'m Kanye. Do you want to hear my tweets?',
-      reprompt: 'Do you want to hear my tweets?',
-      attributes: {}
+      ask: 'I\'m hip hop. Do you want to hear some tweets?',
+      reprompt: 'Do you want to hear some tweets?'
     });
   }
 
@@ -35,7 +34,7 @@ export class Kanye {
       attributes: { max_id: maxId }
     })).catch(error => {
       console.error(error);
-      return say('I had trouble finding Kanye\'s tweets');
+      return say('I had trouble finding hiphop tweets');
     });
   }
 
@@ -48,7 +47,7 @@ export class Kanye {
     });
   }
 
-  @Intent('Crazy', 'Greatest', 'Love', 'LoveMe', 'Movie', 'Quotes', 'Style', 'Wisdom')
+  @Intent('Crazy', 'Greatest', 'Love', 'LoveMe', 'Movie', 'Style', 'Wisdom')
   quote(slots, request) {
     return this._response(random(data[request.intent.name] || data.Quotes));
   }
@@ -72,7 +71,7 @@ export class Kanye {
   _quoteResponse(text, includeCard = true) {
     return Response.build({
       say: text,
-      ...(includeCard && { card: { title: 'Kanye quote', content: text } })
+      ...(includeCard && { card: { title: 'Quote', content: text } })
     });
   }
 
@@ -87,7 +86,7 @@ export class Kanye {
     return {
       card: {
         type: 'Standard',
-        title: '@kanyewest',
+        title: `@${tweet.screen_name}`,
         text: hydrateTweetText(tweet),
         ...getImages(tweet)
       }
