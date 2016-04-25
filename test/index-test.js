@@ -5,7 +5,7 @@ import UserTimelineFixture from './fixtures/user_timeline.json';
 import UserTimelineWithMediaFixture from './fixtures/tweet_with_media.json';
 import SearchFixture from './fixtures/search.json';
 
-test('LaunchRequest', t => {
+test.skip('LaunchRequest', t => {
   const event = Request.launchRequest().build();
 
   return Skill(event).then(response => {
@@ -21,7 +21,7 @@ test('LaunchRequest', t => {
   });
 });
 
-test('Help intent', t => {
+test.skip('Help intent', t => {
   const event = Request.intent('AMAZON.HelpIntent').build();
 
   return Skill(event).then(response => {
@@ -37,7 +37,7 @@ test('Help intent', t => {
   });
 });
 
-test('Latest tweet intent', t => {
+test.skip('Latest tweet intent', t => {
   const skill = new Kanye({}, {
     getUserTimeline() {
       return Promise.resolve(UserTimelineFixture);
@@ -58,7 +58,7 @@ test('Latest tweet intent', t => {
   });
 });
 
-test('Latest tweet is media only', t => {
+test.skip('Latest tweet is media only', t => {
   const skill = new Kanye({}, {
     getUserTimeline() {
       return Promise.resolve(UserTimelineWithMediaFixture);
@@ -87,7 +87,7 @@ test('Latest tweet is media only', t => {
   });
 });
 
-test('Search intent', t => {
+test.skip('Search intent', t => {
   const skill = new Kanye({}, {
     getSearch() {
       return Promise.resolve(SearchFixture.statuses);

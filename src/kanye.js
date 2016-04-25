@@ -1,4 +1,4 @@
-import { Skill, Launch, Intent } from 'alexa-annotations';
+import { Skill, Launch, Intent, SessionEnded } from 'alexa-annotations';
 import Response, { say } from 'alexa-response';
 import { ssml } from 'alexa-ssml';
 import Twitter, { hydrateTweetText } from './twitter';
@@ -16,11 +16,18 @@ export class Kanye {
   }
 
   @Launch
-  @Intent('AMAZON.HelpIntent')
   launch() {
     return Response.build({
-      ask: 'I\'m hip hop. Do you want to hear some tweets?',
-      reprompt: 'Do you want to hear some tweets?'
+      ask: 'I\'m hip hop artist. Do you want to hear tweets?',
+      reprompt: 'Do you want to hear tweets?'
+    });
+  }
+
+  @Intent('AMAZON.HelpIntent')
+  help() {
+    return Response.build({
+      ask: 'I\'m hip hop artist, I read hip hop tweets. Do you want to hear them?',
+      reprompt: 'Do you want to hear tweets?'
     });
   }
 
@@ -52,6 +59,7 @@ export class Kanye {
     return this._response(random(data[request.intent.name] || data.Quotes));
   }
 
+  @SessionEnded
   @Intent('AMAZON.CancelIntent', 'AMAZON.NoIntent', 'AMAZON.StopIntent')
   goodbye() {
     return this._response(random(data.Goodbye), false);
@@ -86,7 +94,7 @@ export class Kanye {
     return {
       card: {
         type: 'Standard',
-        title: `@${tweet.screen_name}`,
+        title: '@kanyewest',
         text: hydrateTweetText(tweet),
         ...getImages(tweet)
       }
