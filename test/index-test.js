@@ -1,43 +1,41 @@
 import test from 'ava';
 import Skill, { Kanye } from '../src/kanye';
-import { Request } from 'alexa-annotations';
+import Request from 'alexa-request';
 import UserTimelineFixture from './fixtures/user_timeline.json';
 import UserTimelineWithMediaFixture from './fixtures/tweet_with_media.json';
 import SearchFixture from './fixtures/search.json';
 
-test.skip('LaunchRequest', t => {
+test('LaunchRequest', t => {
   const event = Request.launchRequest().build();
 
   return Skill(event).then(response => {
     t.deepEqual(response, {
       version: '1.0',
-      sessionAttributes: {},
       response: {
         shouldEndSession: false,
-        outputSpeech: { type: 'PlainText', text: 'I\'m Kanye. Do you want to hear my tweets?' },
-        reprompt: { outputSpeech: { type: 'PlainText', text: 'Do you want to hear my tweets?' } }
+        outputSpeech: { type: 'PlainText', text: 'I\'m Kanye, a fan made skill for Alexa. Do you want to hear Kanye\'s tweets?' },
+        reprompt: { outputSpeech: { type: 'PlainText', text: 'Do you want to hear Kanye\'s tweets?' } }
       }
     });
   });
 });
 
-test.skip('Help intent', t => {
+test('Help intent', t => {
   const event = Request.intent('AMAZON.HelpIntent').build();
 
   return Skill(event).then(response => {
     t.deepEqual(response, {
       version: '1.0',
-      sessionAttributes: {},
       response: {
         shouldEndSession: false,
-        outputSpeech: { type: 'PlainText', text: 'I\'m Kanye. Do you want to hear my tweets?' },
-        reprompt: { outputSpeech: { type: 'PlainText', text: 'Do you want to hear my tweets?' } }
+        outputSpeech: { type: 'PlainText', text: 'I\'m Kanye, a fan made skill for Alexa. Do you want to hear Kanye\'s tweets?' },
+        reprompt: { outputSpeech: { type: 'PlainText', text: 'Do you want to hear Kanye\'s tweets?' } }
       }
     });
   });
 });
 
-test.skip('Latest tweet intent', t => {
+test('Latest tweet intent', t => {
   const skill = new Kanye({}, {
     getUserTimeline() {
       return Promise.resolve(UserTimelineFixture);
@@ -58,7 +56,7 @@ test.skip('Latest tweet intent', t => {
   });
 });
 
-test.skip('Latest tweet is media only', t => {
+test('Latest tweet is media only', t => {
   const skill = new Kanye({}, {
     getUserTimeline() {
       return Promise.resolve(UserTimelineWithMediaFixture);
@@ -87,7 +85,7 @@ test.skip('Latest tweet is media only', t => {
   });
 });
 
-test.skip('Search intent', t => {
+test('Search intent', t => {
   const skill = new Kanye({}, {
     getSearch() {
       return Promise.resolve(SearchFixture.statuses);

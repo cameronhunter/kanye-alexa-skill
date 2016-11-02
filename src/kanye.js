@@ -1,6 +1,5 @@
 import { Skill, Launch, Intent, SessionEnded } from 'alexa-annotations';
 import Response, { say } from 'alexa-response';
-import { ssml } from 'alexa-ssml';
 import Twitter, { hydrateTweetText } from './twitter';
 import TwitterConfig from '../config/twitter.config.js';
 import data, { Type } from './quotes';
@@ -16,18 +15,11 @@ export class Kanye {
   }
 
   @Launch
-  launch() {
-    return Response.build({
-      ask: 'I\'m hip hop artist. Do you want to hear tweets?',
-      reprompt: 'Do you want to hear tweets?'
-    });
-  }
-
   @Intent('AMAZON.HelpIntent')
   help() {
     return Response.build({
-      ask: 'I\'m hip hop artist, I read hip hop tweets. Do you want to hear them?',
-      reprompt: 'Do you want to hear tweets?'
+      ask: 'I\'m Kanye, a fan made skill for Alexa. Do you want to hear Kanye\'s tweets?',
+      reprompt: 'Do you want to hear Kanye\'s tweets?'
     });
   }
 
@@ -41,7 +33,7 @@ export class Kanye {
       attributes: { max_id: maxId }
     })).catch(error => {
       console.error(error);
-      return say('I had trouble finding hiphop tweets');
+      return say('I had trouble finding Kanye\'s tweets. Please try again later.');
     });
   }
 
@@ -49,9 +41,10 @@ export class Kanye {
   search({ query }) {
     return this.client.getSearch({ q: `${query} from:kanyewest` }).then(([tweet]) => {
       return this._tweetResponse(tweet);
-    }).catch(() => {
-      return say('I don\'t know anything about that');
-    });
+    }).catch(() => Response.build({
+      ask: `Kanye hasn\'t tweeted about "${query}". Would you like to hear what he has tweeted about?`,
+      reprompt: 'Do you want to hear Kanye\'s tweets?'
+    }));
   }
 
   @Intent('Crazy', 'Greatest', 'Love', 'LoveMe', 'Movie', 'Style', 'Wisdom')
