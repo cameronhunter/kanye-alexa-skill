@@ -54,5 +54,8 @@
     "alexa-skill",
     "echo",
     "skill"
-  ]
+  ],
+  "dependencies": {
+    "alexa-ssml-jsx": "^1.0.1"
+  }
 }

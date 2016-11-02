@@ -1,5 +1,6 @@
 import { Skill, Launch, Intent, SessionEnded } from 'alexa-annotations';
 import Response, { say } from 'alexa-response';
+import ssml from 'alexa-ssml-jsx';
 import Twitter, { hydrateTweetText } from './twitter';
 import TwitterConfig from '../config/twitter.config.js';
 import data, { Type } from './quotes';
@@ -27,7 +28,13 @@ export class Kanye {
   tweet() {
     const max_id = this.attributes.max_id;
     return this._getTweet(max_id).then(({ tweet, maxId }) => Response.build({
-      ask: `${getSpeakableText(tweet)}. Would you like to hear another?`,
+      ask: (
+        <speak>
+          <s>{getSpeakableText(tweet)}</s>
+          <break time='1s' />
+          <s>Would you like to hear another?</s>
+        </speak>
+      ),
       reprompt: 'Do you want to hear another tweet?',
       ...this._tweetCard(tweet),
       attributes: { max_id: maxId }
