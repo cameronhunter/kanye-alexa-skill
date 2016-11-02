@@ -4,6 +4,7 @@ import Request from 'alexa-request';
 import UserTimelineFixture from './fixtures/user_timeline.json';
 import UserTimelineWithMediaFixture from './fixtures/tweet_with_media.json';
 import SearchFixture from './fixtures/search.json';
+import ssml, { renderToString } from 'alexa-ssml-jsx';
 
 test('LaunchRequest', t => {
   const event = Request.launchRequest().build();
@@ -48,7 +49,16 @@ test('Latest tweet intent', t => {
       sessionAttributes: { max_id: '717490840239783937' },
       response: {
         shouldEndSession: false,
-        outputSpeech: { type: 'PlainText', text: 'Tribe changed music forever. Would you like to hear another?' },
+        outputSpeech: {
+          type: 'SSML',
+          ssml: renderToString(
+            <speak>
+              <s>Tribe changed music forever</s>
+              <break time='1s' />
+              <s>Would you like to hear another?</s>
+            </speak>
+          )
+        },
         card: { type: 'Standard', title: '@kanyewest', text: 'Tribe changed music forever' },
         reprompt: { outputSpeech: { type: 'PlainText', text: 'Do you want to hear another tweet?' } }
       }
@@ -69,7 +79,16 @@ test('Latest tweet is media only', t => {
       sessionAttributes: { max_id: '716380100820754432' },
       response: {
         shouldEndSession: false,
-        outputSpeech: { type: 'PlainText', text: 'Kanye tweeted a photo, I\'ve sent it to your Alexa app. Would you like to hear another?' },
+        outputSpeech: {
+          type: 'SSML',
+          ssml: renderToString(
+            <speak>
+              <s>Kanye tweeted a photo, I've sent it to your Alexa app</s>
+              <break time='1s' />
+              <s>Would you like to hear another?</s>
+            </speak>
+          )
+        },
         card: {
           type: 'Standard',
           title: '@kanyewest',
